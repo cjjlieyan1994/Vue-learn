@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+
+	</head>
+	<body>
+		<div id="app">
+			<p>{{ msg }}</p>
+		</div>
+		<!-- 这里的html结构就是 MVVM 中的 V -->
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+
+	<script type="text/javascript">
+		//创建一个vue实例
+		//在我们导入包之后,在浏览器的内存中就多了一个vue 构造函数
+		//注意:我们new出来的这个 vm 对象就是我们MVVM中的调度者
+		var vm = new Vue({
+			el: '#app', //表示当前我们new的这个vue实例,要控制页面上的哪个区域
+			//这里的 data 就是 MVVM 中的 M,专门用来保存每个页面 的数据的
+			data: { //data存放的是 el 中要用到的的数据
+				msg: 'hello',
+			}
+		})
+	</script>
+</html>

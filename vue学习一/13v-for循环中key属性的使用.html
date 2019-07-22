@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+
+		<div id="app">
+			<div class="">
+				
+				<label>Name:<input type="text" v-model="name" />
+				</label>
+				<label>ID:<input type="text" v-model="id" />
+				</label>
+				<input type="button" name="" id="" value="添加" @click="add"/>
+			</div>
+			<!-- v-for 循环的时候key属性只能使用  number 或string  -->
+			<!-- 注意:key 在使用的时候,必须使用 v-bind 属性绑定形式,指定key的值 -->
+			<!-- 在组件中使用v-for循环的时候,或者在一些特殊情况中,如果v-for有问题,必须在使用v-for的同时
+			 指定唯一的字符串/数字类型的 key 值-->
+			<p v-for="item in list" :key='item.id'><!-- key绑定 -->
+				<input type="checkbox" />
+				{{item.name}}---{{item.id}}
+			</p>
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		// 注意：在2.2.0+版本里,当在组件中使用 v-for 时.key现在是必须的,key用来标识对象的唯一身份
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				id:'',
+				name:'',
+				list: [{
+						id: 1,
+						name: '你好1'
+					},
+					{
+						id: 2,
+						name: '你好2'
+					},
+					{
+						id: 3,
+						name: '你好3'
+					},
+					{
+						id: 4,
+						name: '你好4'
+					},
+					{
+						id: 5,
+						name: '你好5'
+					}
+				]
+			},
+			methods: {
+					add(){//添加方法
+						this.list.unshift({ id:this.id,name:this.name })//头部添加unshift   尾部添加push
+					}
+			}
+		})
+	</script>
+</html>

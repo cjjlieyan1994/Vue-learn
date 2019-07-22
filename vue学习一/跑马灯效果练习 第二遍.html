@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<input type="button" value="走起来" @click="move" />
+			<input type="button" value="停下"  @click="stop"/>
+			<h4>{{msg}}</h4>
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//注意:在vm实例中,如果想要调用data上的数据,或者methods中的方法,必须通过 this.  数据属性名 或 this.方法名 来进行访问
+		//这里的this 就表示我们new出来的 VM实例对象
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				msg: '加油吧骚年~~~',
+				fnInterid:null//在data上定义  定时器id
+			},
+			methods: {
+				move() {
+					//旧方法
+					// 				var _this = this;
+					// 				setInterval(function(){
+					// 					//获取到头的第一个字符
+					// 					var start = _this.msg.substring(0,1);
+					// 					//获取后面的所有字符
+					// 					var end = _this.msg.substring(1);
+					// 					//重新拼接得到新的字符串,并赋值给 this.msg
+					// 					_this.msg =  end+start;
+
+					//新方法  箭头函数:箭头函数内部的this永远和外部的保持一致,解决函数this的指向问题
+					if(this.fnInterid != null)return;
+					this.fnInterid =setInterval(() => {
+						//获取到头的第一个字符
+						var start = this.msg.substring(0, 1);
+						//获取后面的所有字符
+						var end = this.msg.substring(1);
+						//重新拼接得到新的字符串,并赋值给 this.msg
+						this.msg = end + start;
+					}, 400)
+					//注意:vm实例,会监听自己身上 data 中所有数据的改变  ,只要数据发生变化,就会自动把最新的数据 从data 中同步到 页面中去
+					//好处:只需要关心数据,不需要考虑重新渲染页面
+				},
+				
+				stop(){
+					clearInterval(this.fnInterid);
+					//每当清除定时器之后,要把fnInterid回归为null
+					this.fnInterid = null;
+				}
+				
+			}
+
+		})
+	</script>
+</html>

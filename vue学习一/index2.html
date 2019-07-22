@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>你好啊</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<h1>{{ a }}</h1>
+		</div>
+		
+		<script type="text/javascript">
+		
+			/*created:实例创建完成后调用，此阶段完成数据的观测等，但尚未挂载，$el还不可以用，需要初始化处理一些数据时会比较有用，
+			 ·mounted el挂载到实例上调用，一般我们的第一个业务逻辑会在这里开始
+			 beforeDestroy 实例销毁之前调用，主要解绑一些使用addeventlistener 监听事件等
+			*/
+			
+			var app = new Vue({
+				el:'app',
+				data:{
+					a:2
+				},
+				created:function()
+			})
+			
+		</script>
+	</body>
+</html>

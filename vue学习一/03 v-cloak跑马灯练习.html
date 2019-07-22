@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>跑马灯效果</title>
+	</head>
+	<body>
+		<div id="app">
+			<input type="button" name="" id="" value="走起来" @click="lang" />
+			<input type="button" name="" id="" value="站住" @click="stop" />
+			<h4>{{ msg }}</h4>
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//在vm实例中,如果想要获取 data 上的数据 ,或者 想要调用 methods中的方法.必须通过this.数据属性名  或  this.方法名来进行访问,这里的this就表示我们new出来 		vm 实例对象
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				msg: '走起来，不要停~~~',
+				intervarId: null //在data上定义定时器id
+			},
+			methods: {
+				lang() { //ES6写法  相当于lang:function()
+					// var _this = this;
+					if(this.intervarId !=null)return;//证明有定时器正在运行
+						//解决重复点击  走起来  按钮加速的问题
+
+					this.intervarId = setInterval(() => {
+						//箭头函数() => {} 相当于function(){},这里就不用考虑this指向问题,箭头函数内部的this 的指向与外部保持一致				
+						// console.log(this.msg)
+						//获取到头的第一个字符
+						var start = this.msg.substring(0, 1);//获取第0个,获取一次
+						//获取到后面的所有字符
+						var end = this.msg.substring(1);
+						//重新拼接到新的字符串 ， 并赋值给this.msg
+						this.msg = end + start;
+					}, 400)
+					//注意:VM实例  会监听自己身上 data 中所有数据的改变 ,只要数据一发生变化,就会自动把嘴新数据,从data上同步到页面中去
+					//好处:只需要关心数据,不需要考虑如何重新渲染DOM页面
+				},
+				stop() { //停止定时器
+					clearInterval(this.intervarId);
+					//每当清除定时器后,需要重新把 intervarId 置为null
+					this.intervarId = null;
+				}
+			}
+
+		})
+
+		//分析:
+		//1、给走起来按钮绑定点击事件     v-on
+		//2、在按钮的事件处理函数中,写相关的业务逻辑代码:  拿到 msg  字符串  ,然后调用字符串的
+		//substring  来进行字符串的截取操作,把第一个字符截取出来放在最后一个即可
+		//3、为了实现点击下按钮,自动截取的功能,需要把2步骤中的代码,放到定时器中去
+		//
+	</script>
+</html>

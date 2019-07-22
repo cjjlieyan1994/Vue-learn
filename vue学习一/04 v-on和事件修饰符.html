@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>事件修饰符</title>
+		<style type="text/css">
+			.inner {
+				height: 9.375rem;
+				background-color: darkcyan;
+			}
+			.div2{
+				padding: 2.5rem;
+				background-color: yellow;
+				}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 使用  stop 修饰符 阻止冒泡 -->
+			<!-- <div class="inner" @click="divHandler"> -->
+			<!-- <input type="button" value="戳他"  @click.stop="btnHandler"/> -->
+			<!--  stop修饰符  阻止btn的冒泡事件，不会触发外层父级的点击事件 -->
+			<!-- </div> -->
+
+			<!-- 使用 prevent 修饰符 阻止默认行为  如 表单的submit事件也能阻止-->
+			<!-- <a href="http://www.baidu.com" @click.prevent="linkClick">百度一下</a> -->
+			<!-- 这里使用 prevent 阻止了 a 标签 跳转到百度的默认行为-->
+
+			<!-- 使用 capture 添加事件侦听器时使用事件捕获模式   这里如果点击按钮就会先触发外层div的点击事件再触发按钮的点击事件-->
+			<!-- <div class="inner" @click.capture="divHandler">
+				<input type="button" value="戳他"  @click="btnHandler"/>
+			</div> -->
+
+			<!-- 使用 self 实现只有点击当前元素时候 才会触发事件处理函数 即只当事件在该元素本身 [比如不是子元素] 触发时触发回调-->
+			<!-- <div class="inner" @click.self="divHandler">
+				<input type="button" value="戳他"  @click="btnHandler"/>
+			</div> -->
+			<!-- 使用 once 只触发一次事件处理函数   这里prevent和once先后位置不影响触发效果 -->
+			<a href="http://www.baidu.com" @click.prevent.once="linkClick">百度一下</a>
+
+			<!-- stop  与 self 的区别 -->
+			<div class="div2" @click="div2Handler">
+				<div class="inner" @click.self="divHandler">
+					<input type="button" value="戳他" @click="btnHandler" />
+				</div>
+			</div>
+			<!-- 总结  self只会阻止自身的冒泡行为的触发，不会阻止真正的冒泡行为，stop则是阻止冒泡继续进行-->
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {},
+			methods: {
+				divHandler() {
+					console.log("这是触发了inner  div 点击事件");
+				},
+				btnHandler() {
+					console.log("这是触发了 btn 按钮 的点击事件");
+				},
+				linkClick() {
+					console.log("这是触发了 链接 的点击事件");
+				},
+				div2Handler(){
+					console.log("这是触发了 div2 的点击事件")
+				}
+
+			}
+		})
+	</script>
+</html>

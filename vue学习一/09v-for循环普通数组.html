@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+		<!-- 	<p>{{list[0]}}</p>
+			<p>{{list[1]}}</p>
+			<p>{{list[2]}}</p>
+			<p>{{list[3]}}</p>
+			<p>{{list[4]}}</p> -->
+			<p v-for="item in list">{{item}}</p>
+			<ul>
+				<li v-for="item in list">{{item}}</li>
+			</ul>
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el:'#app',
+			data:{
+					list:[1,2,34,55,66]
+			},
+			methods:{
+				
+			}
+		})
+		// 原生方法   [1,2,3,4].forEach((item,i)=>{})
+	</script>
+</html>
