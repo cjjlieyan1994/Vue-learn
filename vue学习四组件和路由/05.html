@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>定义实例内部私有组件</title>
+	</head>
+	<body>
+		<div id="app">
+			<!-- <login></login> -->
+		</div>
+		<div id="app2">
+			<login></login>
+		</div>
+		<template id="tem2">
+			<h1>这是私有的 login 组件</h1>
+		</template>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//创建 Vue 实例  得到  ViewMlodel
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				
+			},
+			methods:{
+				
+			}
+		})
+		var vm = new Vue({
+			el:'#app2',
+			data:{
+				
+			},
+			methods:{
+				
+			},
+			components:{//定义实例内部私有组件
+				login:{
+					template:'#tem2'
+				}
+			}
+		})
+	</script>
+</html>

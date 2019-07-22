@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>复习 定义组件的方式</title>
+	</head>
+	<body>
+		<div id="app">
+			<!-- <mylogin></mylogin> -->
+			<login></login>
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//定义组件的时候 如果定义全局的组件,Vue.component('组件名称', {})
+		
+		
+		//通过  对象 字面量的形式  定义了一个  组件 模板对象
+		var login = {
+			template:'<h1>123456789</h1>'
+		}
+		//通过 Vue.component 把组件模板对象 .注册为一个全局的Vue组件 同时 ,为这个组件起了一个名称
+		//可以让我们通过标签的形式,在页面中直接引入这个组件
+		// Vue.component('mylogin',login);
+		
+		//创建 Vue 实例  得到  ViewMlodel
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				
+			},
+			methods:{
+				
+			},
+			components:{
+				// '组件的名称':组件的模板对象
+				// 'mylogin':login;
+				login;
+			}
+		})
+	</script>
+</html>

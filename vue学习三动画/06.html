@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>列表动画</title>
+		<style type="text/css">
+			li{
+				border: 1px dashed #999;
+				margin: 5px;
+				line-height: 35px;
+				height: 35px;
+				font-size: 12px;
+				list-style: none;
+				width: 100%;
+			}
+			.v-enter,
+			.v-leave-to{
+				opacity: 0;
+				transform: translateY(80px);
+			}
+			
+			.v-enter-active,
+			.v-leave-active{
+				transition: all 0.6s ease;
+			}
+			li:hover{
+				background-color: hotpink;
+				transition: all 0.8s ease;
+			}
+			
+			/*.v-move 和  .v-leave-active 配合使用 能够实现列表后续的元素 渐渐地飘上来的效果*/
+			.v-move{
+				transition: all 0.6s ease;
+			}
+			.v-leave-active{
+				position: absolute;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div>
+				<label>
+					ID:<input type="text"  v-model="id"/>
+				</label>
+				<label>
+					Name:<input type="text" v-model="name" />
+				</label>
+				<input type="button" @click="add" value="添加"/>
+			</div>
+			<ul>
+				<!-- 在实现列表过度的时候，如果需要过度的元素，是通过 v-for 循环出来的 ，不能使用transition包裹。需要使用transition-group-->
+				<transition-group appear><!-- 给 transition-group   加appear属性，实现页面刚展示出来的时候的入场效果 -->
+					<!-- 如果要为 v-for 循环加动画，需要加上 :key -->
+					<li v-for="(item,i) in list" :key="item.id" @click="del(i)">{{item.id}}----------{{item.name}}</li>
+				</transition-group>
+				
+			</ul>
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//创建 Vue 实例  得到  ViewMlodel
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				list:[
+					{id:1,name:'张三'},
+					{id:2,name:'李四'},
+					{id:3,name:'王五'},
+					{id:4,name:'赵六'}	
+				],
+				id:'',
+				name:''
+			},
+			methods:{
+				add(){
+					this.list.push({id:this.id,name:this.name});
+					this.id =this.name = '';
+				},
+				del(i){
+					this.list.splice(i,1);
+				}
+			}
+		})
+	</script>
+</html>

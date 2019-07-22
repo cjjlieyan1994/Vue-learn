@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>创建组件的方式</title>
+		<!-- 组件：
+			组件的出现 就是为了拆分实例的代码量的，能够让我们以不同的组件 来划分不同的功能模块
+			将来我们需要什么样的功能，就可以直接去调用对应的组件即可
+			
+			组件化和模块化的不同：模块化是从代码逻辑的角度划分的 ；方便代码分层开发，保证每个功能的职能单一
+			 组件化是从UI界面角度进行划分的，前端的组件化 方便UI组件的重用，
+	 
+		 -->
+	</head>
+	<body>
+		<div id="app">
+			<!-- 如果要使用组件  直接把组件的名称 以 html 标签的形式  引入到页面中  即可 -->
+			<!-- <my-com1></my-com1> -->
+			<mycom1></mycom1>
+
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//1.1使用Vue.extend 创建全局的Vue组件
+		var com1 = Vue.extend({
+			template:'<h3>这是使用Vue.extend 创建的组件 </h3>'//通过  template 属性,指定了组件要展示的HTML结构
+		});
+		//1.2 使用Vue.component('组件名称','创建出来的组件模板对象')
+		// Vue.component('myCom1',com1);
+		//如果使用Vue.component 使用全局组件的时候,组件名称使用了驼峰命名,需要把大写的驼峰改为小写的字母,同时两个单词之间用 - 连接
+		//如果不使用驼峰,则直接拿名称来使用即可
+		Vue.component('mycom1',com1);
+
+		
+		//创建 Vue 实例  得到  ViewMlodel
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				
+			},
+			methods:{
+				
+			}
+		})
+	</script>
+</html>
