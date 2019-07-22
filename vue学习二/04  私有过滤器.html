@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+	</head>
+	<body>
+		<div id="app">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">添加品牌</h3>
+				</div>
+				<div class="panel-body form-inline">
+					<label>
+						Id：
+						<input type="text" class="form-control" v-model="id" />
+					</label>
+					<label>
+						Name：
+						<input type="text" class="form-control" v-model="name" />
+					</label>
+					<label>
+						<!-- 在vue中使用事件绑定机制，为元素指定处理函数的时候，如果加了小括号，就可以给函数传参了 -->
+						<input type="button" value="添加" class="btn btn-primary" @click="add()" />
+					</label>
+					<label>
+						搜索名称关键字：
+						<input type="text" class="form-control" v-model="keywords" />
+					</label>
+				</div>
+			</div>
+			<table class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Ctime</th>
+						<th>Operation</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 之前，v-for 中的数据都是从  data 上的list 中直接渲染过来的 -->
+					<!-- 现在 ，我们自定义了一个search方法，同时把所有关键字，通过传参的形式传递给了  search 方法-->
+					<!-- 在search方法内部，通过执行for 循环，把所有符合搜索关键字的数据 保存到一个新的数组中，返回 -->
+					<tr v-for="item in search(keywords)" :key='item.id'>
+						<td>{{item.id}}</td>
+						<td v-text="item.name"></td>
+						<td>{{item.ctime | dataFormat()}}</td>
+						<td>
+							<a href="#" @click.prevent="del(item.id)">删除</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="app2">
+			<h3>{{dt | dataFormat}}</h3>
+		</div>
+
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//全局过滤器 进行时间格式化
+		//所谓的全局过滤器,就是所有的VM实例都共享
+		Vue.filter('dataFormat', function(dataStr, pattern = '') {
+			//根据给定的字符串,得到特定的时间
+			var dt = new Date(dataStr)
+
+			//yyyy-mm--dd
+			var y = dt.getFullYear();
+			var m = dt.getMonth() + 1;
+			var d = dt.getDate();
+			// return y+'-'+m+'-'+d;			
+			if (pattern.toLowerCase() === "yyyy-mm-dd") {
+				return `${y}-${m}-${d}`; //模板字符串
+			} else {
+				var hh = dt.getHours();
+				var mm = dt.getMinutes();
+				var ss = dt.getSeconds();
+				return `${y}-${m}-${d} ${hh}:${mm}:${ss}`; //模板字符串
+			}
+
+		});
+
+
+		//创建 Vue 实例  得到  ViewMlodel
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				list: [{
+						id: 1,
+						name: '奔驰',
+						ctime: new Date()
+					},
+					{
+						id: 2,
+						name: '宝马',
+						ctime: new Date()
+					}
+				],
+				id: '',
+				name: '',
+				keywords: ''
+
+			},
+			methods: {
+				add() {
+					var car = {
+						id: this.id,
+						name: this.name,
+						ctime: new Date()
+					};
+					this.list.push(car);
+					this.id = this.name = null;
+				},
+				del(id) {
+					//分析:如何根据id找到要删除这一项的索引;找到索引后,直接调用数组的 splice 方法
+					//some 根据指定条件进行判断,如果返回true 就会立即终止这个数组的后续循环
+					// 					this.list.some((item,i)=>{
+					// 						if(item.id == id){
+					// 							this.list.splice(i,1)
+					// 							return true;
+					// 						}
+					// 					})
+					//findIndex  快速找到索引
+					var index = this.list.findIndex(item => {
+						if (item.id == id) {
+							return true;
+						}
+					})
+					this.list.splice(index, 1);
+				},
+				search(keywords) { //根据关键字进行数据的搜索
+					// 					var newList = [];
+					// 					this.list.forEach(item=>{
+					// 						if(item.name.indexOf(keywords)!=-1){
+					// 							newList.push(item)
+					// 						}
+					// 					})
+					// 					return newList;
+
+
+					/* 注意 ：forEach some filter findIndex  这些都属于数组新方法，都会对数组中的每一项进行遍历，
+					执行相关的操作
+					 */
+
+					var newList = this.list.filter(item => {
+						// if(item.name.indexOf(keywords) !=-1)
+
+						//注意,在ES6中为字符串提供了一个新方法,叫做  String.prototype.includes('要包含的字符串')
+						//如果包含,则返回true 否则返回false 
+						//jQuery中的包含选择器 contains  选取包含指定字符串的元素  该字符串可以是直接包含在元素中的文本,或者被包含于子元素中
+						if (item.name.includes(keywords)) {
+							return item;
+						}
+					})
+					return newList; //或者直接return ,不需要new一个新的newList
+				}
+			}
+		})
+
+		//如何自定义一个私有过滤器 (局部)
+		var vm2 = new Vue({
+			el: '#app2',
+			data: {
+				dt: new Date()
+			},
+			methods: {},
+			//过滤器调用的时候,采用就近原则  ,如果私有过滤器和全局过滤器名称一致,这时候 优先调用私有过滤器
+			filters: { //定义私有过滤器  过滤器有两个条件  [过滤器名称  和 处理函数]
+				dataFormat: function(dataStr, pattern="") {
+					var dt = new Date(dataStr)
+					var y = dt.getFullYear();
+					var m = (dt.getMonth()+1).toString().padStart(2,'0');
+					var d = dt.getDate().toString().padStart(2,'0');
+					// return y+'-'+m+'-'+d;			
+					if (pattern.toLowerCase() === "yyyy-mm-dd") {
+						return `${y}-${m}-${d}`; //模板字符串
+					} else {
+						var hh = dt.getHours().toString().padStart(2,'0');
+						/* ES6中字符串新方法    String.prototype.padStart( maxlength,fillString ='') 或
+						 String.prototype.padEnd( maxlength,fillString ='') 来填充字符串
+						 maxlength：填充完毕后字符串总长度
+						fillString ='' ：用来填充的目标 */
+						var mm = dt.getMinutes().toString().padStart(2,'0');
+						var ss = dt.getSeconds().toString().padStart(2,'0');
+						return `${y}-${m}-${d} ${hh}:${mm}:${ss}~~~~~~`; //模板字符串
+					}
+				}
+			}
+		})
+	</script>
+</html>

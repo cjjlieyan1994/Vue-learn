@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+	</head>
+	<body>
+		<div id="app">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">添加品牌</h3>
+				</div>
+				<div class="panel-body form-inline">
+					<label>
+						Id：
+						<input type="text" class="form-control" v-model="id" />
+					</label>
+					<label>
+						Name：
+						<!-- 按键修饰符  enter  tab delete（捕获“删除”或“退格”键） esc space up down left right（上下左右） -->
+						<!-- <input type="text" class="form-control" v-model="name" @keyup.enter="add"/> -->
+						<input type="text" class="form-control" v-model="name" @keyup.f2="add"/>
+
+					</label>
+					<label>
+						<!-- 在vue中使用事件绑定机制，为元素指定处理函数的时候，如果加了小括号，就可以给函数传参了 -->
+						<input type="button" value="添加" class="btn btn-primary" @click="add()" />
+					</label>
+					<label>
+						搜索名称关键字：
+						<!-- 注意： vue中  所有的指令  在调用的时候都以 v-  开头 -->
+						<input type="text" class="form-control" v-model="keywords" id="search" v-focus v-color="'blue'" />
+					</label>
+				</div>
+			</div>
+			<table class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Ctime</th>
+						<th>Operation</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="item in search(keywords)" :key='item.id'>
+						<td>{{item.id}}</td>
+						<td v-text="item.name"></td>
+						<td>{{item.ctime | dataFormat()}}</td>
+						<td>
+							<a href="#" @click.prevent="del(item.id)">删除</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="app2">
+			<h3 v-color="'pink'" v-fontweight="'900'">{{dt | dataFormat}}</h3>
+		</div>
+
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+
+		Vue.filter('dataFormat', function(dataStr, pattern = '') {
+			//根据给定的字符串,得到特定的时间
+			var dt = new Date(dataStr)
+			var y = dt.getFullYear();
+			var m = dt.getMonth() + 1;
+			var d = dt.getDate();
+			// return y+'-'+m+'-'+d;			
+			if (pattern.toLowerCase() === "yyyy-mm-dd") {
+				return `${y}-${m}-${d}`; //模板字符串
+			} else {
+				var hh = dt.getHours();
+				var mm = dt.getMinutes();
+				var ss = dt.getSeconds();
+				return `${y}-${m}-${d} ${hh}:${mm}:${ss}`; //模板字符串
+			}
+
+		});
+		
+		Vue.config.keyCodes.f2 =113;
+		
+		
+
+		Vue.directive('focus',{
+			bind:function(el){//每当指令绑定到元素上的时候,会立即执行这个 bind 函数,只执行一次
+
+			},
+			inserted:function(el){//inserted 表示元素插入到DOM中的时候,会执行 inserted 函数  只触发一次
+				
+				//这时候元素已经插入到 DOM 中去了,所以能调用
+				el.focus();
+				//和js行为有关的操作,最好在 inserted 中去执行,防止 js行为不生效
+			},
+			updated:function(el){//当 VNode（组件） 更新的时候，会执行 updated，可能会触发多次 
+				
+			}
+		});
+		Vue.directive('color',{
+			bind:function(el,binding){
+				//样式只要通过指令绑定给了元素,不管这个元素有没有插入到页面中去,这个元素肯定有了一个内联样式
+				//将来元素肯定会显示到页面中去,这时候,浏览器的渲染引擎必然会解析样式,应用给这个元素
+				//el.style.color = 'red';
+				//和样式相关的操作,一般都可以在bind中执行
+				
+// 				console.log(binding.name);//color
+// 				console.log(binding.value);//blue
+// 				console.log(binding.expression);//'blue'
+				
+				el.style.color = binding.value;
+
+			}
+		})
+		
+		
+		
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				list: [{
+						id: 1,
+						name: '奔驰',
+						ctime: new Date()
+					},
+					{
+						id: 2,
+						name: '宝马',
+						ctime: new Date()
+					}
+				],
+				id: '',
+				name: '',
+				keywords: ''
+
+			},
+			methods: {
+				add() {
+					var car = {
+						id: this.id,
+						name: this.name,
+						ctime: new Date()
+					};
+					this.list.push(car);
+					this.id = this.name = null;
+				},
+				del(id) {
+
+					var index = this.list.findIndex(item => {
+						if (item.id == id) {
+							return true;
+						}
+					})
+					this.list.splice(index, 1);
+				},
+				search(keywords) { 
+
+
+					var newList = this.list.filter(item => {
+						if (item.name.includes(keywords)) {
+							return item;
+						}
+					})
+					return newList; //或者直接return ,不需要new一个新的newList
+				}
+			}
+		})
+
+
+		var vm2 = new Vue({
+			el: '#app2',
+			data: {
+				dt: new Date()
+			},
+			methods: {},
+
+			filters: { //定义私有过滤器  过滤器有两个条件  [过滤器名称  和 处理函数]
+				dataFormat: function(dataStr, pattern="") {
+					var dt = new Date(dataStr)
+					var y = dt.getFullYear();
+					var m = (dt.getMonth()+1).toString().padStart(2,'0');
+					var d = dt.getDate().toString().padStart(2,'0');
+					// return y+'-'+m+'-'+d;			
+					if (pattern.toLowerCase() === "yyyy-mm-dd") {
+						return `${y}-${m}-${d}`; //模板字符串
+					} else {
+						var hh = dt.getHours().toString().padStart(2,'0');
+						var mm = dt.getMinutes().toString().padStart(2,'0');
+						var ss = dt.getSeconds().toString().padStart(2,'0');
+						return `${y}-${m}-${d} ${hh}:${mm}:${ss}~~~~~~`; //模板字符串
+					}
+				}
+			},
+			directives:{//自定义私有指令
+				'fontweight':{
+					bind:function(el,binding){
+						el.style.fontWeight = binding.value;
+					}
+				}
+			}
+		})
+	
+		
+	</script>
+</html>

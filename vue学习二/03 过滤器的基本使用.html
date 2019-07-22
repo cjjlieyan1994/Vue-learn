@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<p>{{ msg | msgFormat('嘻嘻+3','123') | test}}</p>
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//定义一个 Vue 全局的过滤器 名字叫做  msgFormat
+		Vue.filter('msgFormat',function(msg,arg,arg2){//回调函数
+			//字符串的 replace 方法 第一个参数,除了可以写一个字符串之外,还可以定义一个正则
+			//return msg.replace('哈哈','嘻嘻')//只能替换第一个
+			//return msg.replace(/哈哈/g,'嘻嘻')//全局替换  正则
+			
+			//return msg.replace(/哈哈/g,arg)
+			return msg.replace(/哈哈/g,arg + arg2)
+		})
+		
+		Vue.filter('test',function(msg){
+			return msg + '======='
+		})
+		//可以调用多个过滤器
+		//定义一个全局的Vue必须在Vue实例前面,不然不会触发全局过滤器  ？
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				msg:'曾经哈哈喜欢哈哈一直哈哈真的好哈哈也许'
+			},
+			methods:{
+				 
+			}
+		})
+	</script>
+</html>
