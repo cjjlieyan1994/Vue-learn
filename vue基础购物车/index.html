@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<template v-if="list.length">
+				<table class="table">
+					<thead>
+						<tr>
+							<th></th>
+							<th>商品名称</th>
+							<th>商品单价</th>
+							<th>购买数量</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="( item , index ) in list">
+							<td>{{index + 1}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.price}}</td>
+							<td>
+								<button type="button" @click="hadRe(index)" :disabled="item.count === 1">-</button>
+								{{ item.count}}
+								<button type="button" @click="hadAdd(index)">+</button>
+							</td>
+							<td>
+								<button type="button" @click="hadRemove(index)">移除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div><button type="button" @click="goodAdd">添加新产品 </button></div>
+				<div>总价：￥{{ totalPrice }}</div>
+			</template>
+			<div v-else>购物车为空</div>
+		</div>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		let vm = new Vue({
+			el: "#app",
+			data: {
+				list: [{
+						id: 1,
+						name: 'iphone6',
+						price: '5145',
+						count: 1
+					},
+					{
+						id: 2,
+						name: 'iphone7',
+						price: '6254',
+						count: 1
+					},
+					{
+						id: 3,
+						name: 'iphone8',
+						price: '7451',
+						count: 1
+					}
+				],
+				list2: {
+					id: 4,
+					name: 'iphone',
+					price: '8145',
+					count: 1
+				}
+			},
+			computed: {
+				totalPrice: function() {
+					var total = 0;
+					for (var i = 0; i < this.list.length; i++) {
+						var item = this.list[i];
+						total += item.price * item.count;
+					}
+					return total.toString().replace(/\B(?=d{3})+$/g, ',') //千位分隔符的转换
+				}
+			},
+			methods: {
+				hadRe(index) {
+					if (this.list[index].count === 1) return;
+					this.list[index].count--;
+				},
+				hadAdd(index) {
+					this.list[index].count++;
+				},
+				hadRemove(index) {
+					this.list.splice(index, 1)
+				},
+				goodAdd() {
+					this.list.push({
+						id: this.list.length+1,
+						name: 'iphone',
+						price: "1587",
+						count: 1
+					})
+				}
+
+			}
+		})
+	</script>
+</html>
