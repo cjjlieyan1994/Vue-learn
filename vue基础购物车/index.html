@@ -82,23 +82,42 @@
 				}
 			},
 			methods: {
+				//减掉数量,最少为1
 				hadRe(index) {
 					if (this.list[index].count === 1) return;
 					this.list[index].count--;
 				},
+				//增加数量
 				hadAdd(index) {
 					this.list[index].count++;
 				},
+				//移除商品
 				hadRemove(index) {
 					this.list.splice(index, 1)
 				},
+				//增加商品
 				goodAdd() {
 					this.list.push({
-						id: this.list.length+1,
+						id: this.list.length + 1,
 						name: 'iphone',
-						price: "1587",
+						price: this.randomNum(5888,8888),
 						count: 1
 					})
+				},
+				//生成从minNum到maxNum的随机数
+				randomNum(minNum, maxNum) {
+					switch (arguments.length) {
+						case 1:
+							return parseInt(Math.random() * minNum + 1, 10);
+							break;
+						case 2:
+							return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+							//或者 Math.floor(Math.random()*( maxNum - minNum + 1 ) + minNum );
+							break;
+						default:
+							return 0;
+							break;
+					}
 				}
 
 			}
