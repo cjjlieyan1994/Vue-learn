@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>标签页组件</title>
+		<link rel="stylesheet" type="text/css" href="style.css"/>
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<tabs v-model="activeKey">
+				<pane label="标签一" name="1">标签一的内容</pane>
+				<pane label="标签二" name="2">标签二的内容</pane>
+				<pane label="标签三" name="3">标签三的内容</pane>
+			</tabs>
+		</div>
+		<!-- 组件tabs -->
+		<template id="chidb">
+			<div class="tabs">
+				<div class="tabs-bar">
+					<!-- 标签页标题，这里用v-for -->
+					<div :class="tabCls(item)" v-for="(item,index) in navList" @click="handleChange(index)">
+						{{ item.label }}
+					</div>
+				</div>
+				<div class="tabs-content">
+					<!-- 这里的slot就是嵌套pane -->
+					<slot></slot>
+				</div>
+			</div>
+		</template>
+		<!-- 组件 pane -->
+		<template id="chidb2">
+			<div class="pane" v-show="show">
+				<slot></slot>
+			</div>
+		</template>
+	</body>
+	<script src="js/vue2.6.10.js" type="text/javascript" charset="utf-8"></script>
+	<script src="pane.js" type="text/javascript" charset="utf-8"></script>
+	<script src="tab.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el:"#app",
+			data:{
+				activeKey:"1"
+			}
+		})
+		/* 分析
+		 定义一个组件pane  嵌套在标签页tabs 里面 
+		 业务逻辑代码放在 pane 的slot 内 
+		 而三个pane 组件 作为整体成为 tabs的slot
+		 由于tabs和pane分离，但tabs的标题由pane组件定义  
+		 因为slot 是写在pane 里，因此组件初始化时 tabs 要从 pane 里获取标题
+		 
+		 */
+	</script>
+</html>
